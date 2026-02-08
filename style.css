@@ -1,7 +1,17 @@
-/* ----------------- BODY ----------------- */
-body {
+/* ----------------- RESET & BOX SIZING ----------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
   padding: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ----------------- BODY ----------------- */
+body {
   font-family: 'Arial', sans-serif;
   text-align: center;
   min-height: 100vh;
@@ -9,7 +19,24 @@ body {
   justify-content: center;
   align-items: center;
   background: linear-gradient(to right, #ff9a9e, #fad0c4);
-  overflow-x: hidden;
+  position: relative;
+}
+
+/* ----------------- FLOATING HEARTS ----------------- */
+body::before {
+  content: "❤️";
+  position: absolute;
+  font-size: 1rem;
+  animation: floatHearts 8s linear infinite;
+  top: 100%;
+  left: 50%;
+  opacity: 0.6;
+}
+
+@keyframes floatHearts {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  50% { transform: translate(-50px, -150px) scale(1.2); opacity: 1; }
+  100% { transform: translate(50px, -300px) scale(0.8); opacity: 0; }
 }
 
 /* ----------------- CARD ----------------- */
@@ -25,7 +52,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-sizing: border-box;
+  justify-content: center;
+  min-height: 80vh;
+  position: relative;
+  overflow: hidden;
 }
 
 /* ----------------- HEADINGS ----------------- */
@@ -46,7 +76,6 @@ input {
   border: none;
   margin: 15px 0;
   font-size: 1rem;
-  box-sizing: border-box;
   text-align: center;
 }
 
@@ -72,7 +101,7 @@ button:hover {
   box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
 }
 
-/* ----------------- BUTTON CLICK MAGIC ----------------- */
+/* ----------------- BUTTON CLICK SPARKLES ----------------- */
 button:active::after {
   content: "✨";
   position: absolute;
@@ -134,15 +163,15 @@ button:active::after {
 
 /* ----------------- MOBILE RESPONSIVE ----------------- */
 @media (max-width: 480px) {
-
   body {
-    align-items: flex-start; /* Allows card to stay visible without scrolling too much */
+    align-items: flex-start;
     padding-top: 30px;
   }
 
   .card {
     width: 95%;
     padding: 25px 15px;
+    min-height: 70vh;
   }
 
   h1 {
@@ -169,21 +198,4 @@ button:active::after {
   #finalMessage {
     font-size: 1rem;
   }
-}
-
-/* ----------------- FLOATING HEARTS BACKGROUND ----------------- */
-body::before {
-  content: "❤️";
-  position: absolute;
-  font-size: 1rem;
-  animation: floatHearts 8s linear infinite;
-  top: 100%;
-  left: 50%;
-  opacity: 0.6;
-}
-
-@keyframes floatHearts {
-  0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-  50% { transform: translate(-50px, -150px) scale(1.2); opacity: 1; }
-  100% { transform: translate(50px, -300px) scale(0.8); opacity: 0; }
 }
