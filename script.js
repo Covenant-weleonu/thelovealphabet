@@ -1,65 +1,105 @@
-function saveName() {
-  const name = document.getElementById("nameInput").value.trim();
-  if (!name) {
-    alert("Please enter your name 💕");
-    return;
-  }
+// -------------------- SUPABASE SETUP --------------------
+const SUPABASE_URL = "https://bggwdxkeiqhjnbqfutgi.supabase.co";     
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnZ3dkeGtlaXFoam5icWZ1dGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1NjcyNDcsImV4cCI6MjA4NjE0MzI0N30.sgcqdp7pctcnOYzFXRd3L_xRZZLLxtqqQj5mBHwZmcQ";  
+
+const { createClient } = supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// -------------------- SAVE NAME --------------------
+async function saveName() {
+  const nameInput = document.getElementById("nameInput");
+  if (!nameInput) return; // not on this page
+  const name = nameInput.value.trim();
+  if (!name) return alert("Enter your name 💕");
+
+  // Save locally for flow
   localStorage.setItem("username", name);
+
+  // Save to Supabase
+  try {
+    const { data, error } = await supabaseClient
+      .from("submissions")
+      .insert([{ name }]);
+    if (error) console.error("Error saving name:", error);
+    else console.log("Name saved:", data);
+  } catch (err) {
+    console.error("Supabase error:", err);
+  }
+
+  // Redirect to letters page
   window.location.href = "letters.html";
 }
 
+// -------------------- LOAD LETTERS --------------------
 function loadLetters() {
-  const container = document.getElementById("letters");
-  for (let i = 65; i <= 90; i++) {
-    let letter = String.fromCharCode(i);
-    let btn = document.createElement("button");
-    btn.innerText = letter;
-    btn.onclick = () => {
-      localStorage.setItem("letter", letter);
+  const lettersDiv = document.getElementById("letters");
+  if (!lettersDiv) return; // not on this page
+
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  lettersDiv.innerHTML = "";
+
+  letters.forEach(l => {
+    const btn = document.createElement("button");
+    btn.textContent = l;
+
+    btn.onclick = async () => {
+      localStorage.setItem("letter", l);
+
+      const username = localStorage.getItem("username");
+      if (!username) return;
+
+      // Update Supabase submission with the selected letter
+      try {
+        const { data, error } = await supabaseClient
+          .from("submissions")
+          .update({ letter: l })
+          .eq("name", username)
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (error) console.error("Error saving letter:", error);
+        else console.log("Letter saved:", data);
+      } catch (err) {
+        console.error("Supabase error:", err);
+      }
+
+      // Go to final message
       window.location.href = "message.html";
     };
-    container.appendChild(btn);
-  }
+
+    lettersDiv.appendChild(btn);
+  });
 }
 
+// -------------------- SHOW FINAL MESSAGE --------------------
 function showFinalMessage() {
-  const name = localStorage.getItem("username");
-  const letter = localStorage.getItem("letter");
+  const messageEl = document.getElementById("finalMessage");
+  if (!messageEl) return; // not on this page
 
-  const messages = {
-    A: n => `Always remember how special you are, ${n}.`,
-    B: n => `Beautiful hearts deserve endless love, ${n}.`,
-    C: n => `Cherish every moment, because you are loved, ${n}.`,
-    D: n => `Dreams feel sweeter when you smile, ${n}.`,
-    E: n => `Every heartbeat whispers love for you, ${n}.`,
-    F: n => `Forever would still feel short with you, ${n}.`,
-    G: n => `Grace and warmth follow you everywhere, ${n}.`,
-    H: n => `Happiness lives wherever you are, ${n}.`,
-    I: n => `In every universe, you matter, ${n}.`,
-    J: n => `Joy shines brighter because of you, ${n}.`,
-    K: n => `Kind souls like yours are rare, ${n}.`,
-    L: n => `Love blooms effortlessly around you, ${n}.`,
-    M: n => `Moments feel magical when you’re near, ${n}.`,
-    N: n => `Nothing compares to your smile, ${n}.`,
-    O: n => `Only love follows your footsteps, ${n}.`,
-    P: n => `Pure hearts attract beautiful stories, ${n}.`,
-    Q: n => `Quiet love speaks loudest with you, ${n}.`,
-    R: n => `Radiance flows naturally from you, ${n}.`,
-    S: n => `Sweetness defines everything about you, ${n}.`,
-    T: n => `True love always finds its way to you, ${n}.`,
-    U: n => `Unforgettable is your presence, ${n}.`,
-    V: n => `Valentine magic lives in you, ${n}.`,
-    W: n => `Warm love surrounds your heart, ${n}.`,
-    X: n => `XOXO will never be enough for you, ${n}.`,
-    Y: n => `You are deeply cherished, ${n}.`,
-    Z: n => `Zeal for love shines within you, ${n}.`
-  };
+  const username = localStorage.getItem("username") || "Sweetheart";
+  const letter = localStorage.getItem("letter") || "A";
 
-  document.getElementById("finalMessage").innerText =
-    messages[letter](name);
+  const messages = [
+    `${letter} is the start of something magical for ${username} 💖`,
+    `Dear ${username}, your love journey begins with ${letter} 💌`,
+    `${username}, today ${letter} brings you a sweet surprise 💘`,
+    `Roses are red, violets are blue, ${letter} starts a special message for you, ${username} 🌹`,
+    `Hello ${username}! The letter ${letter} whispers love just for you 💞`
+  ];
+
+  const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+  messageEl.textContent = randomMessage;
 }
 
+// -------------------- TRY AGAIN --------------------
 function tryAgain() {
-  localStorage.clear();
+  localStorage.removeItem("letter");
   window.location.href = "index.html";
 }
+
+// -------------------- INITIALIZATION --------------------
+// Call automatically if the function exists on the page
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("letters")) loadLetters();
+  if (document.getElementById("finalMessage")) showFinalMessage();
+});
