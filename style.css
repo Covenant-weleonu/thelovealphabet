@@ -1,0 +1,39 @@
+body {
+  background: linear-gradient(to right, #ff9a9e, #fad0c4);
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  color: white;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 30px;
+  margin: 100px auto;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 20px;
+}
+
+input {
+  padding: 10px;
+  width: 80%;
+  border-radius: 10px;
+  border: none;
+  margin: 10px 0;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  background: white;
+  color: hotpink;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+#letters button {
+  margin: 5px;
+  width: 45px;
+}
