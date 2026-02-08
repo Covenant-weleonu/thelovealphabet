@@ -1,39 +1,185 @@
+/* ----------------- BODY ----------------- */
 body {
-  background: linear-gradient(to right, #ff9a9e, #fad0c4);
-  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
   text-align: center;
-  color: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  background: linear-gradient(to right, #ff9a9e, #fad0c4);
+  position: relative;
 }
 
+/* ----------------- FLOATING HEARTS ----------------- */
+body::before {
+  content: "❤️";
+  position: absolute;
+  font-size: 1rem;
+  animation: floatHearts 8s linear infinite;
+  top: 100%;
+  left: 50%;
+  opacity: 0.6;
+}
+
+@keyframes floatHearts {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50px, -150px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(50px, -300px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* ----------------- CARD ----------------- */
 .card {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 30px;
-  margin: 100px auto;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  padding: 35px 20px;
+  margin: 20px;
   width: 90%;
   max-width: 400px;
-  border-radius: 20px;
+  border-radius: 25px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  position: relative;
+  overflow: hidden;
 }
 
+/* ----------------- HEADINGS ----------------- */
+h1 {
+  margin-top: 0;
+  font-size: 2rem;
+  font-family: 'Dancing Script', cursive;
+  color: #fff;
+  text-shadow: 2px 2px 6px #ff6f91;
+}
+
+/* ----------------- INPUT ----------------- */
 input {
-  padding: 10px;
-  width: 80%;
-  border-radius: 10px;
+  padding: 12px;
+  width: 90%;
+  border-radius: 15px;
   border: none;
-  margin: 10px 0;
+  margin: 15px 0;
+  font-size: 1rem;
+  box-sizing: border-box;
+  text-align: center;
 }
 
+/* ----------------- BUTTONS ----------------- */
 button {
-  padding: 10px 20px;
-  border-radius: 20px;
+  padding: 12px 20px;
+  border-radius: 30px;
   border: none;
-  background: white;
+  background: linear-gradient(45deg, #fff, #ffd1dc);
   color: hotpink;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 10px;
+  margin: 8px 5px;
+  font-size: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+}
+
+button:hover {
+  transform: scale(1.1);
+  background: linear-gradient(45deg, #ffe0e6, #ff7fa1);
+  box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+}
+
+/* ----------------- BUTTON CLICK MAGIC ----------------- */
+button:active::after {
+  content: "✨";
+  position: absolute;
+  font-size: 1.2rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  animation: popMagic 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes popMagic {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+}
+
+/* ----------------- ALPHABET BUTTONS ----------------- */
+#letters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 15px;
 }
 
 #letters button {
-  margin: 5px;
   width: 45px;
+  height: 45px;
+  margin: 5px;
+  font-size: 1rem;
+  padding: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#letters button:hover {
+  transform: scale(1.2) rotate(-5deg);
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.7);
+}
+
+/* ----------------- FINAL MESSAGE ----------------- */
+#finalMessage {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: #fff;
+  text-shadow: 1px 1px 5px #ff6f91;
+  animation: fadeIn 0.8s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ----------------- MOBILE RESPONSIVE ----------------- */
+@media (max-width: 400px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  input {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+  }
+
+  #letters button {
+    width: 35px;
+    height: 35px;
+    font-size: 0.85rem;
+    margin: 4px;
+  }
+
+  #finalMessage {
+    font-size: 1rem;
+  }
 }
