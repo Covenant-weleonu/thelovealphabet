@@ -1,29 +1,37 @@
-// -------------------- SUPABASE SETUP --------------------
-const SUPABASE_URL = "https://bggwdxkeiqhjnbqfutgi.supabase.co";     
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnZ3dkeGtlaXFoam5icWZ1dGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1NjcyNDcsImV4cCI6MjA4NjE0MzI0N30.sgcqdp7pctcnOYzFXRd3L_xRZZLLxtqqQj5mBHwZmcQ";  
-
-const { createClient } = supabase;
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// -------------------- AIRTABLE CONFIG --------------------
+const AIRTABLE_API_KEY = "patDOVC3Yzb9TAmGz.6331c0cc9bca0550a7f7b571e57364df104960db5c5d8e4a3d1cc6c08f6679b4";   // PAT 
+const BASE_ID = "appuH4Klw8aLOF5y7";           // Base ID
+const TABLE_NAME = "submissions";         // table name
 
 // -------------------- SAVE NAME --------------------
 async function saveName() {
   const nameInput = document.getElementById("nameInput");
-  if (!nameInput) return; // not on this page
+  if (!nameInput) return;
+
   const name = nameInput.value.trim();
   if (!name) return alert("Enter your name 💕");
 
-  // Save locally for flow
+  // Save locally for flow between pages
   localStorage.setItem("username", name);
 
-  // Save to Supabase
+  // Send name to Airtable
+  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
+  const data = { fields: { name: name, created_at: new Date().toISOString() } };
+
   try {
-    const { data, error } = await supabaseClient
-      .from("submissions")
-      .insert([{ name }]);
-    if (error) console.error("Error saving name:", error);
-    else console.log("Name saved:", data);
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${AIRTABLE_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    console.log("Airtable name saved:", result);
   } catch (err) {
-    console.error("Supabase error:", err);
+    console.error("Error saving name to Airtable:", err);
   }
 
   // Redirect to letters page
@@ -33,37 +41,51 @@ async function saveName() {
 // -------------------- LOAD LETTERS --------------------
 function loadLetters() {
   const lettersDiv = document.getElementById("letters");
-  if (!lettersDiv) return; // not on this page
+  if (!lettersDiv) return;
 
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   lettersDiv.innerHTML = "";
 
-  letters.forEach(l => {
+  letters.forEach(letter => {
     const btn = document.createElement("button");
-    btn.textContent = l;
+    btn.textContent = letter;
 
     btn.onclick = async () => {
-      localStorage.setItem("letter", l);
-
+      localStorage.setItem("letter", letter);
       const username = localStorage.getItem("username");
       if (!username) return;
 
-      // Update Supabase submission with the selected letter
-      try {
-        const { data, error } = await supabaseClient
-          .from("submissions")
-          .update({ letter: l })
-          .eq("name", username)
-          .order("created_at", { ascending: false })
-          .limit(1);
+      // Find Airtable record for this username
+      const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula=({name}='${username}')`;
 
-        if (error) console.error("Error saving letter:", error);
-        else console.log("Letter saved:", data);
+      try {
+        const fetchRes = await fetch(url, { headers: { "Authorization": `Bearer ${AIRTABLE_API_KEY}` } });
+        const fetchData = await fetchRes.json();
+
+        if (fetchData.records.length > 0) {
+          const recordId = fetchData.records[0].id;
+          const updateUrl = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}/${recordId}`;
+          const updateData = { fields: { letter: letter } };
+
+          const updateRes = await fetch(updateUrl, {
+            method: "PATCH",
+            headers: {
+              "Authorization": `Bearer ${AIRTABLE_API_KEY}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updateData)
+          });
+
+          const updateResult = await updateRes.json();
+          console.log("Airtable letter saved:", updateResult);
+        } else {
+          console.warn("No record found to update letter");
+        }
       } catch (err) {
-        console.error("Supabase error:", err);
+        console.error("Error updating letter in Airtable:", err);
       }
 
-      // Go to final message
+      // Go to message page
       window.location.href = "message.html";
     };
 
@@ -74,7 +96,7 @@ function loadLetters() {
 // -------------------- SHOW FINAL MESSAGE --------------------
 function showFinalMessage() {
   const messageEl = document.getElementById("finalMessage");
-  if (!messageEl) return; // not on this page
+  if (!messageEl) return;
 
   const username = localStorage.getItem("username") || "Sweetheart";
   const letter = localStorage.getItem("letter") || "A";
@@ -93,12 +115,12 @@ function showFinalMessage() {
 
 // -------------------- TRY AGAIN --------------------
 function tryAgain() {
+  localStorage.removeItem("username");
   localStorage.removeItem("letter");
   window.location.href = "index.html";
 }
 
 // -------------------- INITIALIZATION --------------------
-// Call automatically if the function exists on the page
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("letters")) loadLetters();
   if (document.getElementById("finalMessage")) showFinalMessage();
