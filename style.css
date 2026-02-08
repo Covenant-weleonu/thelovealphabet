@@ -8,54 +8,29 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow-x: hidden;
   background: linear-gradient(to right, #ff9a9e, #fad0c4);
-  position: relative;
-}
-
-/* ----------------- FLOATING HEARTS ----------------- */
-body::before {
-  content: "❤️";
-  position: absolute;
-  font-size: 1rem;
-  animation: floatHearts 8s linear infinite;
-  top: 100%;
-  left: 50%;
-  opacity: 0.6;
-}
-
-@keyframes floatHearts {
-  0% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translate(-50px, -150px) scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(50px, -300px) scale(0.8);
-    opacity: 0;
-  }
+  overflow-x: hidden;
 }
 
 /* ----------------- CARD ----------------- */
 .card {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  padding: 35px 20px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  padding: 30px 20px;
   margin: 20px;
   width: 90%;
   max-width: 400px;
   border-radius: 25px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-  position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
 }
 
 /* ----------------- HEADINGS ----------------- */
 h1 {
-  margin-top: 0;
+  margin: 0 0 15px 0;
   font-size: 2rem;
   font-family: 'Dancing Script', cursive;
   color: #fff;
@@ -66,6 +41,7 @@ h1 {
 input {
   padding: 12px;
   width: 90%;
+  max-width: 320px;
   border-radius: 15px;
   border: none;
   margin: 15px 0;
@@ -91,9 +67,9 @@ button {
 }
 
 button:hover {
-  transform: scale(1.1);
+  transform: scale(1.08);
   background: linear-gradient(45deg, #ffe0e6, #ff7fa1);
-  box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
 }
 
 /* ----------------- BUTTON CLICK MAGIC ----------------- */
@@ -136,7 +112,7 @@ button:active::after {
 }
 
 #letters button:hover {
-  transform: scale(1.2) rotate(-5deg);
+  transform: scale(1.15) rotate(-5deg);
   box-shadow: 0 0 15px rgba(255, 105, 180, 0.7);
 }
 
@@ -157,13 +133,24 @@ button:active::after {
 }
 
 /* ----------------- MOBILE RESPONSIVE ----------------- */
-@media (max-width: 400px) {
+@media (max-width: 480px) {
+
+  body {
+    align-items: flex-start; /* Allows card to stay visible without scrolling too much */
+    padding-top: 30px;
+  }
+
+  .card {
+    width: 95%;
+    padding: 25px 15px;
+  }
+
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
   input {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     padding: 10px;
   }
 
@@ -182,4 +169,21 @@ button:active::after {
   #finalMessage {
     font-size: 1rem;
   }
+}
+
+/* ----------------- FLOATING HEARTS BACKGROUND ----------------- */
+body::before {
+  content: "❤️";
+  position: absolute;
+  font-size: 1rem;
+  animation: floatHearts 8s linear infinite;
+  top: 100%;
+  left: 50%;
+  opacity: 0.6;
+}
+
+@keyframes floatHearts {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  50% { transform: translate(-50px, -150px) scale(1.2); opacity: 1; }
+  100% { transform: translate(50px, -300px) scale(0.8); opacity: 0; }
 }
