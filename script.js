@@ -1,3 +1,44 @@
+// SAVE NAME
+function saveName() {
+  const nameInput = document.getElementById("nameInput");
+
+  if (!nameInput || nameInput.value.trim() === "") {
+    alert("Please enter your name 💖");
+    return;
+  }
+
+  localStorage.setItem("username", nameInput.value.trim());
+  window.location.href = "letters.html";
+}
+
+
+// LOAD 26 LETTERS ONLY
+function loadLetters() {
+  const container = document.getElementById("letters");
+  if (!container) return;
+
+  container.innerHTML = ""; // prevents duplication
+
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  for (let i = 0; i < alphabet.length; i++) {
+    const letter = alphabet[i];
+
+    const btn = document.createElement("button");
+    btn.textContent = letter;
+    btn.classList.add("letter-btn");
+
+    btn.onclick = function () {
+      localStorage.setItem("selectedLetter", letter);
+      window.location.href = "message.html";
+    };
+
+    container.appendChild(btn);
+  }
+}
+
+
+// SHOW MESSAGE
 function showMessage() {
   const messageContainer = document.getElementById("finalMessage");
   if (!messageContainer) return;
@@ -5,34 +46,47 @@ function showMessage() {
   const name = localStorage.getItem("username") || "Sweetheart";
   const letter = localStorage.getItem("selectedLetter") || "A";
 
-  const loveMessages = {
-    A: `A wonderful heart like ${name} deserves endless happiness and beautiful moments 💖`,
-    B: `Bright smiles and warm days surround someone as special as ${name} 💕`,
-    C: `Cherished and celebrated, ${name} brings light wherever they go ✨`,
-    D: `Delight and joy naturally follow a soul like ${name} 💘`,
-    E: `Every day feels brighter with someone as amazing as ${name} 🌹`,
-    F: `Filled with kindness and charm, ${name} makes the world sweeter 💞`,
-    G: `Grace and goodness shine effortlessly through ${name} 💖`,
-    H: `Happiness grows wherever ${name} shares a smile 💓`,
-    I: `Incredible energy and warmth define someone like ${name} 💌`,
-    J: `Joy seems to follow ${name} everywhere 🌸`,
-    K: `Kind words and lovely moments always surround ${name} ✨`,
+  const messages = {
+    A: `A beautiful soul like ${name} deserves endless happiness 💖`,
+    B: `Bright smiles and warm moments surround ${name} 💕`,
+    C: `Cherished and celebrated, ${name} brings light everywhere ✨`,
+    D: `Delight follows someone as wonderful as ${name} 💘`,
+    E: `Every day shines brighter with ${name} around 🌹`,
+    F: `Filled with kindness and charm, ${name} stands out 💞`,
+    G: `Grace and goodness naturally describe ${name} 💖`,
+    H: `Happiness grows wherever ${name} goes 💓`,
+    I: `Incredible energy makes ${name} unforgettable 💌`,
+    J: `Joy surrounds ${name} in the sweetest way 🌸`,
+    K: `Kind hearts like ${name}'s make the world better ✨`,
     L: `Love and laughter suit ${name} perfectly 💕`,
-    M: `Moments become magical around someone like ${name} 💖`,
-    N: `Nothing compares to the warmth that ${name} brings 🌷`,
-    O: `Optimism and sweetness beautifully describe ${name} 💘`,
-    P: `Pure positivity shines brightly through ${name} 💓`,
-    Q: `Quiet strength and beauty define ${name} 💞`,
-    R: `Radiant and rare, ${name} is truly unforgettable 🌹`,
-    S: `Smiles grow easily in the presence of ${name} 💖`,
-    T: `Tender moments and sweet memories suit ${name} perfectly 💕`,
-    U: `Unmatched charm and grace make ${name} stand out ✨`,
-    V: `Vibrant and valuable, ${name} brightens every space 💘`,
-    W: `Warmth and wonder follow ${name} everywhere 💓`,
-    X: `XOXO and sweet vibes surround ${name} today 💌`,
-    Y: `Youthful spirit and bright energy define ${name} 💖`,
-    Z: `Zealous joy and sparkle naturally belong to ${name} 🌹`
+    M: `Magical moments follow ${name} everywhere 💖`,
+    N: `Nothing compares to the warmth ${name} brings 🌷`,
+    O: `Optimism and sweetness define ${name} 💘`,
+    P: `Pure positivity shines through ${name} 💓`,
+    Q: `Quiet beauty makes ${name} truly special 💞`,
+    R: `Radiant and rare, ${name} lights up every space 🌹`,
+    S: `Smiles appear easily around ${name} 💖`,
+    T: `Tender moments suit ${name} perfectly 💕`,
+    U: `Unmatched charm makes ${name} unforgettable ✨`,
+    V: `Vibrant energy surrounds ${name} daily 💘`,
+    W: `Warmth follows ${name} everywhere 💓`,
+    X: `XOXO and sweet vibes belong to ${name} 💌`,
+    Y: `Youthful spirit defines ${name} beautifully 💖`,
+    Z: `Zealous joy and sparkle fit ${name} perfectly 🌹`
   };
 
-  messageContainer.textContent = loveMessages[letter];
+  messageContainer.textContent = messages[letter];
 }
+
+
+// TRY AGAIN BUTTON
+function tryAgain() {
+  window.location.href = "index.html";
+}
+
+
+// AUTO RUN
+document.addEventListener("DOMContentLoaded", function () {
+  loadLetters();
+  showMessage();
+});
