@@ -1,40 +1,3 @@
-// ------------------ SAVE NAME ------------------
-function saveName() {
-  const nameInput = document.getElementById("nameInput");
-  if (!nameInput) return;
-
-  const name = nameInput.value.trim();
-  if (!name) {
-    alert("Please enter your beautiful name 💖");
-    return;
-  }
-
-  localStorage.setItem("username", name);
-  window.location.href = "letters.html";
-}
-
-// ------------------ LOAD LETTERS ------------------
-function loadLetters() {
-  const lettersContainer = document.getElementById("letters");
-  if (!lettersContainer) return;
-
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
-  alphabet.forEach(letter => {
-    const btn = document.createElement("button");
-    btn.textContent = letter;
-    btn.classList.add("letter-btn");
-
-    btn.onclick = () => {
-      localStorage.setItem("selectedLetter", letter);
-      window.location.href = "message.html";
-    };
-
-    lettersContainer.appendChild(btn);
-  });
-}
-
-// ------------------ SHOW FINAL MESSAGE ------------------
 function showMessage() {
   const messageContainer = document.getElementById("finalMessage");
   if (!messageContainer) return;
@@ -42,95 +5,34 @@ function showMessage() {
   const name = localStorage.getItem("username") || "Sweetheart";
   const letter = localStorage.getItem("selectedLetter") || "A";
 
-  const messages = [
-    `${letter} is for Amazing, just like you, ${name} 💖`,
-    `${letter} begins a beautiful story written just for you, ${name} 💌`,
-    `${name}, ${letter} stands for the love that shines in your heart 💕`,
-    `Roses are red, violets are blue, ${letter} starts a love message for you, ${name} 🌹`,
-    `${letter} marks the beginning of something magical for you, ${name} ✨`
-  ];
+  const loveMessages = {
+    A: `A wonderful heart like ${name} deserves endless happiness and beautiful moments 💖`,
+    B: `Bright smiles and warm days surround someone as special as ${name} 💕`,
+    C: `Cherished and celebrated, ${name} brings light wherever they go ✨`,
+    D: `Delight and joy naturally follow a soul like ${name} 💘`,
+    E: `Every day feels brighter with someone as amazing as ${name} 🌹`,
+    F: `Filled with kindness and charm, ${name} makes the world sweeter 💞`,
+    G: `Grace and goodness shine effortlessly through ${name} 💖`,
+    H: `Happiness grows wherever ${name} shares a smile 💓`,
+    I: `Incredible energy and warmth define someone like ${name} 💌`,
+    J: `Joy seems to follow ${name} everywhere 🌸`,
+    K: `Kind words and lovely moments always surround ${name} ✨`,
+    L: `Love and laughter suit ${name} perfectly 💕`,
+    M: `Moments become magical around someone like ${name} 💖`,
+    N: `Nothing compares to the warmth that ${name} brings 🌷`,
+    O: `Optimism and sweetness beautifully describe ${name} 💘`,
+    P: `Pure positivity shines brightly through ${name} 💓`,
+    Q: `Quiet strength and beauty define ${name} 💞`,
+    R: `Radiant and rare, ${name} is truly unforgettable 🌹`,
+    S: `Smiles grow easily in the presence of ${name} 💖`,
+    T: `Tender moments and sweet memories suit ${name} perfectly 💕`,
+    U: `Unmatched charm and grace make ${name} stand out ✨`,
+    V: `Vibrant and valuable, ${name} brightens every space 💘`,
+    W: `Warmth and wonder follow ${name} everywhere 💓`,
+    X: `XOXO and sweet vibes surround ${name} today 💌`,
+    Y: `Youthful spirit and bright energy define ${name} 💖`,
+    Z: `Zealous joy and sparkle naturally belong to ${name} 🌹`
+  };
 
-  const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-  messageContainer.textContent = randomMessage;
+  messageContainer.textContent = loveMessages[letter];
 }
-
-// ------------------ TRY AGAIN ------------------
-function tryAgain() {
-  localStorage.removeItem("username");
-  localStorage.removeItem("selectedLetter");
-  window.location.href = "index.html";
-}
-
-// ------------------ AUTO RUN WHEN PAGE LOADS ------------------
-document.addEventListener("DOMContentLoaded", () => {
-  loadLetters();
-  showMessage();
-});
-// ------------------ SAVE NAME ------------------
-function saveName() {
-  const nameInput = document.getElementById("nameInput");
-  if (!nameInput) return;
-
-  const name = nameInput.value.trim();
-  if (!name) {
-    alert("Please enter your beautiful name 💖");
-    return;
-  }
-
-  localStorage.setItem("username", name);
-  window.location.href = "letters.html";
-}
-
-// ------------------ LOAD LETTERS ------------------
-function loadLetters() {
-  const lettersContainer = document.getElementById("letters");
-  if (!lettersContainer) return;
-
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
-  alphabet.forEach(letter => {
-    const btn = document.createElement("button");
-    btn.textContent = letter;
-    btn.classList.add("letter-btn");
-
-    btn.onclick = () => {
-      localStorage.setItem("selectedLetter", letter);
-      window.location.href = "message.html";
-    };
-
-    lettersContainer.appendChild(btn);
-  });
-}
-
-// ------------------ SHOW FINAL MESSAGE ------------------
-function showMessage() {
-  const messageContainer = document.getElementById("finalMessage");
-  if (!messageContainer) return;
-
-  const name = localStorage.getItem("username") || "Sweetheart";
-  const letter = localStorage.getItem("selectedLetter") || "A";
-
-  const messages = [
-    `${letter} is for Amazing, just like you, ${name} 💖`,
-    `${letter} begins a beautiful story written just for you, ${name} 💌`,
-    `${name}, ${letter} stands for the love that shines in your heart 💕`,
-    `Roses are red, violets are blue, ${letter} starts a love message for you, ${name} 🌹`,
-    `${letter} marks the beginning of something magical for you, ${name} ✨`
-  ];
-
-  const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-  messageContainer.textContent = randomMessage;
-}
-
-// ------------------ TRY AGAIN ------------------
-function tryAgain() {
-  localStorage.removeItem("username");
-  localStorage.removeItem("selectedLetter");
-  window.location.href = "index.html";
-}
-
-// ------------------ AUTO RUN WHEN PAGE LOADS ------------------
-document.addEventListener("DOMContentLoaded", () => {
-  loadLetters();
-  showMessage();
-});
